@@ -1,6 +1,8 @@
 <?php
-include("./checkSessiton.php");
-$products = $conn->query("SELECT * FROM tb_products WHERE product_status = 1 AND product_amount != 0");
+include "./checkSessiton.php";
+$products = $conn->query(
+    "SELECT * FROM tb_products WHERE product_status = 1 AND product_amount != 0"
+);
 $payments = $conn->query("SELECT p.*,u.user_fname,u.user_lname FROM tb_payment p LEFT JOIN tb_user u
 ON p.user_id = u.user_id ORDER BY p.payment_id DESC");
 
@@ -13,8 +15,6 @@ $productData = [];
 while ($product = $products->fetch_object()) {
     $productData[] = $product;
 }
-
-
 ?>
 <div class="container-fluid">
     <div class="page-header">
@@ -55,15 +55,15 @@ while ($product = $products->fetch_object()) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($productData as $key => $product) {
-                        ?>
+                        <?php foreach ($productData as $key => $product) { ?>
                             <tr>
                                 <td><?php echo $product->product_id; ?></td>
                                 <td><?php echo $product->product_name; ?></td>
                                 <td><?php echo $product->product_amount; ?></td>
                                 <td><?php echo $product->product_price; ?></td>
-                                <td><?php echo $product->product_size . " " . $product->unit_id; ?></td>
+                                <td><?php echo $product->product_size .
+                                    " " .
+                                    $product->unit_id; ?></td>
                                 <td><?php echo $product->category_id; ?></td>
                             </tr>
                         <?php } ?>
@@ -89,21 +89,54 @@ while ($product = $products->fetch_object()) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($paymentHistory as $key => $payment) {
-                        ?>
+                        <?php foreach ($paymentHistory as $key => $payment) { ?>
                             <tr>
                                 <td><?php echo $key + 1; ?></td>
-                                <td><?php echo $payment->user_fname . " " . $payment->user_lname; ?></td>
+                                <td><?php echo $payment->user_fname .
+                                    " " .
+                                    $payment->user_lname; ?></td>
                                 <td><?php echo $payment->payment_total; ?></td>
                                 <td><?php echo $payment->payment_create_at; ?></td>
                                 <td>
                                     <button onclick="showInfo('<?php echo $payment->payment_id; ?>')" data-toggle="modal" data-target="#infoPaymentModal" class="btn btn-info" type="button">รายละเอียด</button>
                                     <button onclick="deletePayment('<?php echo $payment->payment_id; ?>')" class="btn btn-danger" type="button">ลบ</button>
+                                    <?php if ($payment->tp_id != 0) { ?>
+                                    <button onclick="addTransportNumber('<?php echo $payment->payment_id; ?>','<?php echo $payment->transport_number; ?>')" class="btn btn-warning mx-2" id="transport-number-btn" type="button" data-toggle="modal" data-target="#transportNumberModal">เพิ่มรหัสพัสดุ</button>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="transportNumberModal" tabindex="-1" role="dialog" aria-labelledby="transportNumberModal" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentTitle">เพิ่มรหัสพัสดุ</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <form class="transport-validation" action="action/ac_payment.php?ac=addTransportNumber" id="transportNumberForm" novalidate="">
+                    <div class="modal-body">
+                        <input class="form-control" id="questionTransportNumber" type="text" placeholder="" hidden>
+                        <input class="form-control" id="paymentId" name="paymentId" type="text" placeholder="" hidden>
+                        <div class="row  ">
+                            <div class="col-md-3 mb-3"><h5>รหัสพัสดุ : </h5> </div>
+                            <div class="col-md-9 mb-3">
+                                <input class="form-control" name="transport_number" id="transportNumber" type="text" placeholder="" required>
+                                <div class="invalid-feedback">โปรดกรอกรหัสพัสดุ</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer " id="addPaymentModalFooter">
+                        <button class="btn btn-secondary " id="btn-cancels" onclick="$('#transportNumberForm').trigger('reset')" type="button" data-dismiss="modal">ยกเลิก</button>
+                        <button class="btn btn-primary" type="submit">บันทึก</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -117,7 +150,9 @@ while ($product = $products->fetch_object()) {
                 </div>
                 <form class="payment-validation" action="action/ac_product.php?ac=addProduct" id="addPayment" novalidate="">
                     <input class="form-control" id="questionPayment" type="text" placeholder="" hidden>
-                    <input class="form-control" name="userId" value="<?php echo $_SESSION['user_id']; ?>" id="userId" type="text" placeholder="" hidden>
+                    <input class="form-control" name="userId" value="<?php echo $_SESSION[
+                        "user_id"
+                    ]; ?>" id="userId" type="text" placeholder="" hidden>
                     <div class="modal-body">
                     </div>
 
@@ -139,6 +174,16 @@ while ($product = $products->fetch_object()) {
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
+                    <div>
+                        <div class="row  justify-content-start">
+                            <div class="mx-3 mb-3"><h5>ประเภทขนส่ง : </h5></div>
+                            <div class="mx-2 mb-3"><h5 id="tpType"></h5></div>
+                        </div>
+                        <div class="row  justify-content-start">
+                            <div class="mx-3 mb-3"><h5>รหัสพัสดุ : </h5></div>
+                            <div class="mx-2 mb-3"><h5 id="tpNumber"></h5></div>
+                        </div>
+                    </div>
                     <table class="display" id="order">
                         <thead>
                             <tr>
@@ -158,7 +203,13 @@ while ($product = $products->fetch_object()) {
         </div>
     </div>
 
-    <script>
+    <scripte
+
+        function addTransportNumber(paymentId,transportNumber = ""){
+          $("#paymentId").val(paymentId)
+          $("#transportNumber").val(transportNumber)
+        }
+
         function deletePayment(paymentId) {
             Swal.fire({
                 icon: "question",
@@ -170,7 +221,9 @@ while ($product = $products->fetch_object()) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `action/ac_payment.php?ac=deletePayment&paymentId=${paymentId}&userBy=<?php echo $_SESSION['user_id']; ?>`,
+                        url: `action/ac_payment.php?ac=deletePayment&paymentId=${paymentId}&userBy=<?php echo $_SESSION[
+                            "user_id"
+                        ]; ?>`,
                         type: "POST",
                         data: {
                             paymentId
@@ -214,9 +267,27 @@ while ($product = $products->fetch_object()) {
                 success: function(res) {
                     let {
                         status,
-                        data
+                        data,
+                        tpName,
+                        tpNumber
                     } = JSON.parse(res)
                     if (status) {
+                        $("#tpType").text(tpName)
+
+                        if(tpName === null){
+                          $("#tpType").text("รับที่หน้าร้าน")
+                          $("#tpNumber").text("ไม่มี")
+                        }else{
+                          $("#tpType").text(tpName)
+                          if(tpNumber === null){
+                            $("#tpNumber").text("ไม่มี")
+                          }else{
+                            $("#tpNumber").text(tpNumber)
+                          }
+
+                        }
+
+
                         $("#order tbody").empty();
                         $("#order tbody").append(`
                         <tr>

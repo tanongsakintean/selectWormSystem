@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['ses_id']) || $_SESSION['ses_id'] != session_id()) {
+if (!isset($_SESSION["ses_id"]) || $_SESSION["ses_id"] != session_id()) {
     echo "<script>window.location.replace('login.php')</script>";
 }
 
-include("connect.php");
+include "connect.php";
 ?>
 
 
@@ -73,14 +73,10 @@ include("connect.php");
     <!-- Loader ends-->
     <!-- page-wrapper Start-->
     <div class="page-wrapper">
-        <?php
-        include("header.php");
-        ?>
+        <?php include "header.php"; ?>
         <!-- Page Body Start-->
         <div class="page-body-wrapper">
-            <?php
-            include("sidebar.php");
-            ?>
+            <?php include "sidebar.php"; ?>
 
             <div class="page-body" style="margin-left: 6rem !important;">
 
@@ -88,26 +84,21 @@ include("connect.php");
                 <div class="container-fluid">
                     <div class="row">
 
-                        <?php
-                        if (isset($_REQUEST['p'])) {
-                            include($_REQUEST['p'] . ".php");
+                        <?php if (isset($_REQUEST["p"])) {
+                            include $_REQUEST["p"] . ".php";
                         } else {
-                            if ($_SESSION['user_role'] == 2) {
-                                include("dashboard.php");
+                            if ($_SESSION["user_role"] == 2) {
+                                include "dashboard.php";
                             } else {
-                                include("stock.php");
+                                include "stock.php";
                             }
-                        }
-
-                        ?>
+                        } ?>
                     </div>
                 </div>
                 <!-- Container-fluid Ends-->
             </div>
             <!-- footer start-->
-            <?php
-            include("footer.php");
-            ?>
+            <?php include "footer.php"; ?>
         </div>
     </div>
 
@@ -135,6 +126,8 @@ include("connect.php");
     <script src="assets/js/form/payment-validation-customs.js"></script>
     <script src="assets/js/form/stock-validation-custom.js"></script>
     <script src="assets/js/form/users-validation-custom.js "></script>
+    <script src="assets/js/form/transport-validation-custom.js "></script>
+    <script src="assets/js/form/payment-transport-validation-custom.js "></script>
     <script src="assets/js/datepicker/date-picker/datepicker.js"></script>
     <script src="assets/js/datepicker/date-picker/datepicker.en.js"></script>
     <script src="assets/js/datepicker/date-picker/datepicker.custom.js"></script>

@@ -4,7 +4,7 @@
   window.addEventListener(
     "load",
     function () {
-      var forms = document.getElementsByClassName("payment-validation");
+      var forms = document.getElementsByClassName("transport-validation");
       var validation = Array.prototype.filter.call(forms, function (form) {
         form.addEventListener(
           "submit",
@@ -15,12 +15,12 @@
             } else {
               event.preventDefault();
               ///TODO click type transport
-              let url = $("#addPayment").attr("action");
-              let data = $("#addPayment").serialize();
-              let title = $("#questionPayment").val();
+              let url = $("#transportNumberForm").attr("action");
+              let data = $("#transportNumberForm").serialize();
+              let title = $("#questionTransportNumber").val();
               Swal.fire({
                 icon: "question",
-                title: title,
+                title: "คุณต้องการเพิ่มรหัสพัสดุหรือไม่?",
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: "ใช่",

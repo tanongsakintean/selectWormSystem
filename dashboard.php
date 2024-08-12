@@ -1,6 +1,5 @@
 <?php
-include("./checkSessiton.php");
-?>
+include "./checkSessiton.php"; ?>
 <div class="container-fluid">
     <div class="page-header">
         <div class="row">

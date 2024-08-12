@@ -164,7 +164,7 @@ $(document).ready(function () {
             $(rows)
               .eq(i)
               .before(
-                '<tr class="group"><td colspan="5">' + group + "</td></tr>"
+                '<tr class="group"><td colspan="5">' + group + "</td></tr>",
               );
             last = group;
           }
@@ -187,8 +187,8 @@ $(document).ready(function () {
         return typeof i === "string"
           ? i.replace(/[\$,]/g, "") * 1
           : typeof i === "number"
-          ? i
-          : 0;
+            ? i
+            : 0;
       };
       total = api
         .column(4)
@@ -203,7 +203,7 @@ $(document).ready(function () {
           return intVal(a) + intVal(b);
         }, 0);
       $(api.column(4).footer()).html(
-        "$" + pageTotal + " ( $" + total + " total)"
+        "$" + pageTotal + " ( $" + total + " total)",
       );
     },
   });
@@ -682,7 +682,7 @@ $(document).ready(function () {
           el.indeterminate = true;
         }
       }
-    }
+    },
   );
 
   $("#payment-select-all").on("click", function () {
@@ -711,7 +711,7 @@ $(document).ready(function () {
 
     $("#addPayment").attr(
       "action",
-      `action/ac_payment.php?ac=addPayment&userId=${userId}`
+      `action/ac_payment.php?ac=addPayment&userId=${userId}`,
     );
     $("#questionPayment").val("คุณต้องการเพิ่มยอดขายนี้หรือไม่?");
 
@@ -719,23 +719,62 @@ $(document).ready(function () {
       function () {
         var rowData = paymentRow.row($(this).closest("tr")).data();
         selectedData.push(rowData);
-      }
+      },
     );
 
-    $(".modal-body").empty();
+    $(".payment-validation .modal-body").empty();
     if (selectedData.length == 0) {
       $("#addPaymentModalFooter").addClass("d-none");
       let headTitle = $(
         '<div class="col-md-12 d-flex align-items-center mb-3"><h5 class="text-danger font-weight-bold "> โปรดเลือกสินค้าก่อนเพิ่มยอดขาย!' +
-          "</h5></div>"
+          "</h5></div>",
       );
       $("#addPayment .modal-body").append(headTitle);
     } else {
-      $(".modal-body").empty();
+      $(".payment-validation .modal-body").empty();
       $("#addPaymentModalFooter").removeClass("d-none");
+
+      // TODO ajax get api transsport
+      let transportContainer = $('<div class="form-row mb-3"></div>');
+      let transportDiv = $(
+        '<div class="col-md-6 mb-3"><h5>ประเภทขนส่ง : </h5></div>',
+      );
+      let transpartForm = $(
+        `<div class="col-md-6 mb-3"> <select name="tpId" class="form-control" id="transprortType"> </select> </div>`,
+      );
+
+      $.ajax({
+        url: `action/ac_transport.php?ac=getTransport`,
+        type: "GET", // Change this to "GET" for a GET request
+        data: {},
+        success: function (res) {
+          let { status, data } = JSON.parse(res);
+          if (status) {
+            /// TODO map data to div
+            $("#transprortType ").append(
+              `<option selected="true" disabled="disabled">เลือกขนส่ง</option> `,
+            );
+
+            $("#transprortType ").append(
+              `<option value="0">รับจากร้าน</option> `,
+            );
+
+            data?.map((item) => {
+              $("#transprortType ").append(
+                `<option value="${item.tp_id}">${item.tp_name}</option>`,
+              );
+            });
+          }
+        },
+      });
+
+      transportContainer.append(transportDiv);
+      transportContainer.append(transpartForm);
+      $("#addPayment .modal-body").append(transportContainer);
     }
+
     let totalProduct = $(
-      `<input name="total" id="totalProduct"  hidden  class="form-control" type="text" placeholder="">`
+      `<input name="total" id="totalProduct"  hidden  class="form-control" type="text" placeholder="">`,
     );
     $("#addPayment .modal-body").append(totalProduct);
     selectedData.forEach(function (dataItem, key) {
@@ -744,16 +783,16 @@ $(document).ready(function () {
       var col1Div = $(
         '<div class="col-md-6 d-flex align-items-center mb-3"><h5>' +
           dataItem[1] +
-          "</h5></div>"
+          "</h5></div>",
       );
       var col2Div = $('<div class="col-md-6 mb-3"></div>');
 
       var productId = $(
-        `<input name="productId[]" value="${dataItem[0]}"  class="form-control" type="text" placeholder="" hidden>`
+        `<input name="productId[]" value="${dataItem[0]}"  class="form-control" type="text" placeholder="" hidden>`,
       );
       // Create input elements and set attributes
       var productAmountInput = $(
-        `<input name="productAmount[]" index="${key}"  class="form-control" type="number" placeholder="" required>`
+        `<input name="productAmount[]" index="${key}"  class="form-control" type="number" placeholder="" required>`,
       );
       $("#total").text("0 บาท");
 
@@ -770,7 +809,7 @@ $(document).ready(function () {
       productAmountInput.val();
 
       var invalidFeedbackDiv = $(
-        '<div class="invalid-feedback">โปรดกรอกจำนวนสินค้า</div>'
+        '<div class="invalid-feedback">โปรดกรอกจำนวนสินค้า</div>',
       );
 
       // Append input elements to col2Div
@@ -788,7 +827,7 @@ $(document).ready(function () {
     let summaryTotal = $(
       `<div class="col-md-6 mb-3"><h5 id="total"> ${
         total.length > 0 ? total : 0
-      } บาท</h5></div>`
+      } บาท</h5></div>`,
     );
     summaryContainer.append(summaryDiv);
     summaryContainer.append(summaryTotal);
@@ -816,7 +855,7 @@ $(document).ready(function () {
     alert(
       "The following data would have been submitted to the server: \n\n" +
         data.substr(0, 120) +
-        "..."
+        "...",
     );
     return false;
   });
@@ -834,7 +873,7 @@ $(document).ready(function () {
       .search(
         $("#g-filter").val(),
         $("#global_regex").prop("checked"),
-        $("#global_smart").prop("checked")
+        $("#global_smart").prop("checked"),
       )
       .draw();
   }
@@ -845,7 +884,7 @@ $(document).ready(function () {
       .search(
         $("#col" + i + "_filter").val(),
         $("#col" + i + "_regex").prop("checked"),
-        $("#col" + i + "_smart").prop("checked")
+        $("#col" + i + "_smart").prop("checked"),
       )
       .draw();
   }
@@ -1038,7 +1077,7 @@ $(document).ready(function () {
       alert("Column sum is: " + table.column(3).data().sum());
     });
   $(
-    '<button class="btn btn-primary m-r-10 m-b-20">sum of  age of visible rows</button>'
+    '<button class="btn btn-primary m-r-10 m-b-20">sum of  age of visible rows</button>',
   )
     .prependTo(".dt-plugin-buttons")
     .on("click", function () {
@@ -1049,7 +1088,7 @@ $(document).ready(function () {
               page: "current",
             })
             .data()
-            .sum()
+            .sum(),
       );
     });
   //Api datatable end here

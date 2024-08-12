@@ -4,7 +4,7 @@
   window.addEventListener(
     "load",
     function () {
-      var forms = document.getElementsByClassName("payment-validation");
+      var forms = document.getElementsByClassName("transport-validation");
       var validation = Array.prototype.filter.call(forms, function (form) {
         form.addEventListener(
           "submit",
@@ -14,10 +14,9 @@
               event.stopPropagation();
             } else {
               event.preventDefault();
-              ///TODO click type transport
-              let url = $("#addPayment").attr("action");
-              let data = $("#addPayment").serialize();
-              let title = $("#questionPayment").val();
+              let url = $("#transportForm").attr("action");
+              let data = $("#transportForm").serialize();
+              let title = $("#transportQuestion").val();
               Swal.fire({
                 icon: "question",
                 title: title,
@@ -32,6 +31,7 @@
                     type: "POST",
                     data: data,
                     success: function (res) {
+                      console.log(res);
                       let { status, message } = JSON.parse(res);
 
                       if (status) {
