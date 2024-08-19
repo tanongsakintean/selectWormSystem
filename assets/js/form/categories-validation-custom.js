@@ -4,7 +4,7 @@
   window.addEventListener(
     "load",
     function () {
-      var forms = document.getElementsByClassName("transport-validation");
+      var forms = document.getElementsByClassName("categories-validation");
       var validation = Array.prototype.filter.call(forms, function (form) {
         form.addEventListener(
           "submit",
@@ -14,9 +14,9 @@
               event.stopPropagation();
             } else {
               event.preventDefault();
-              let url = $("#transportForm").attr("action");
-              let data = $("#transportForm").serialize();
-              let title = $("#transportQuestion").val();
+              let url = $("#categoriesForm").attr("action");
+              let data = $("#categoriesForm").serialize();
+              let title = $("#categoriesQuestion").val();
               Swal.fire({
                 icon: "question",
                 title: title,

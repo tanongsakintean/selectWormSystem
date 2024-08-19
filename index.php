@@ -127,6 +127,7 @@ include "connect.php";
     <script src="assets/js/form/stock-validation-custom.js"></script>
     <script src="assets/js/form/users-validation-custom.js "></script>
     <script src="assets/js/form/transport-validation-custom.js "></script>
+    <script src="assets/js/form/categories-validation-custom.js "></script>
     <script src="assets/js/form/payment-transport-validation-custom.js "></script>
     <script src="assets/js/datepicker/date-picker/datepicker.js"></script>
     <script src="assets/js/datepicker/date-picker/datepicker.en.js"></script>

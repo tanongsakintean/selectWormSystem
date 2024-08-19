@@ -740,7 +740,7 @@ $(document).ready(function () {
         '<div class="col-md-6 mb-3"><h5>ประเภทขนส่ง : </h5></div>',
       );
       let transpartForm = $(
-        `<div class="col-md-6 mb-3"> <select name="tpId" class="form-control" id="transprortType"> </select> </div>`,
+        `<div class="col-md-6 mb-3"> <select name="tpId" class="custom-select" required="" id="transprortType"> </select><div class="invalid-feedback">โปรดเลือกขนส่ง</div> </div>`,
       );
 
       $.ajax({
@@ -752,11 +752,7 @@ $(document).ready(function () {
           if (status) {
             /// TODO map data to div
             $("#transprortType ").append(
-              `<option selected="true" disabled="disabled">เลือกขนส่ง</option> `,
-            );
-
-            $("#transprortType ").append(
-              `<option value="0">รับจากร้าน</option> `,
+              `<option value="">เลือกขนส่ง</option> `,
             );
 
             data?.map((item) => {

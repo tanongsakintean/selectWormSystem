@@ -20,8 +20,7 @@ while ($product = $products->fetch_object()) {
     <div class="page-header">
         <div class="row">
             <div class="col-lg-6 main-header">
-                <h2 class="ml-5">ระบบการขาย</h2>
-            </div>
+                <h2 class="ml-5">ระบบการขาย</h2> </div>
             <div class="col-lg-6 breadcrumb-right">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="?p=dashboard"><i class="pe-7s-home"></i></a></li>
@@ -99,10 +98,11 @@ while ($product = $products->fetch_object()) {
                                 <td><?php echo $payment->payment_create_at; ?></td>
                                 <td>
                                     <button onclick="showInfo('<?php echo $payment->payment_id; ?>')" data-toggle="modal" data-target="#infoPaymentModal" class="btn btn-info" type="button">รายละเอียด</button>
-                                    <button onclick="deletePayment('<?php echo $payment->payment_id; ?>')" class="btn btn-danger" type="button">ลบ</button>
                                     <?php if ($payment->tp_id != 0) { ?>
                                     <button onclick="addTransportNumber('<?php echo $payment->payment_id; ?>','<?php echo $payment->transport_number; ?>')" class="btn btn-warning mx-2" id="transport-number-btn" type="button" data-toggle="modal" data-target="#transportNumberModal">เพิ่มรหัสพัสดุ</button>
                                     <?php } ?>
+                                    <button onclick="printSlip('<?php echo $payment->payment_id; ?>')" class="btn btn-success mx-2">พิมพ์</button>
+                                    <button onclick="deletePayment('<?php echo $payment->payment_id; ?>')" class="btn btn-danger" type="button">ลบ</button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -203,7 +203,11 @@ while ($product = $products->fetch_object()) {
         </div>
     </div>
 
-    <scripte
+    <script>
+
+      function printSlip(paymentId){
+        window.open(`http://localhost/selectWormSystem/export_pdf/print_slip_pdf.php?payment_id=${paymentId}`)
+      }
 
         function addTransportNumber(paymentId,transportNumber = ""){
           $("#paymentId").val(paymentId)

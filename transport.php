@@ -1,5 +1,6 @@
 <?php
 include "./checkSessiton.php";
+// ตอน loop ให้ดักไม่เอาไอดีที่เราจะใช้เป็นเลือกหน้าร้านแทน เพราะเดะเอาเป้น condition ของ slip
 
 $transports = $conn->query(
     "SELECT * FROM tb_transport WHERE tp_status = 1  ORDER BY tp_id DESC"
