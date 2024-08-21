@@ -24,7 +24,11 @@ while ($product = $productsLog->fetch_object()) {
             </div>
             <div class="col-lg-6 breadcrumb-right">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="?p=dashboard"><i class="pe-7s-home"></i></a></li>
+                    <?php if ($_SESSION["user_role"] == 2) { ?>
+                   <li class="breadcrumb-item"><a href="?p=dashboard"><i class="pe-7s-home"></i></a></li>
+                   <?php } else { ?>
+                   <li class="breadcrumb-item"><a href="?p=stock"><i class="pe-7s-home"></i></a></li>
+                   <?php } ?>
                     <li class="breadcrumb-item active">ระบบคลัง </li>
                 </ol>
             </div>

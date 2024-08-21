@@ -23,7 +23,11 @@ while ($product = $products->fetch_object()) {
                 <h2 class="ml-5">ระบบการขาย</h2> </div>
             <div class="col-lg-6 breadcrumb-right">
                 <ol class="breadcrumb">
+                    <?php if ($_SESSION["user_role"] == 2) { ?>
                     <li class="breadcrumb-item"><a href="?p=dashboard"><i class="pe-7s-home"></i></a></li>
+                    <?php } else { ?>
+                    <li class="breadcrumb-item"><a href="?p=stock"><i class="pe-7s-home"></i></a></li>
+                    <?php } ?>
                     <li class="breadcrumb-item active">ระบบการขาย </li>
                 </ol>
             </div>

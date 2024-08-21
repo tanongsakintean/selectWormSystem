@@ -1,6 +1,6 @@
 <?php
 
-include("./checkSessiton.php");
+include "./checkSessiton.php";
 $stockStatus = $conn->query("SELECT * FROM tb_stock WHERE stock_status != 0");
 $stockStatusData = [];
 
@@ -16,9 +16,6 @@ foreach ($stockStatusData as $stock) {
 $stockDefault = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 $filteredStockData = array_diff($stockDefault, $stockExits);
-
-
-
 ?>
 <div class="container-fluid">
     <div class="page-header">
@@ -28,7 +25,11 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
             </div>
             <div class="col-lg-6 breadcrumb-right">
                 <ol class="breadcrumb">
+                     <?php if ($_SESSION["user_role"] == 2) { ?>
                     <li class="breadcrumb-item"><a href="?p=dashboard"><i class="pe-7s-home"></i></a></li>
+                    <?php } else { ?>
+                    <li class="breadcrumb-item"><a href="?p=stock"><i class="pe-7s-home"></i></a></li>
+                    <?php } ?>
                     <li class="breadcrumb-item active">ระบบการผลิต </li>
                 </ol>
             </div>
@@ -63,28 +64,29 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
             </div>
 
             <div class="row ">
-                <?php
-                for ($i = 1; $i < 13; $i++) {
+                <?php for ($i = 1; $i < 13; $i++) {
+
                     $stockColor = "bg-danger";
                     foreach ($stockStatusData as $key => $stock) {
                         if ($stock->stock_name == $i) {
                             if ($stock->stock_status == 1) {
                                 $stockColor = "bg-warning";
-                            } else if ($stock->stock_status == 2) {
+                            } elseif ($stock->stock_status == 2) {
                                 $stockColor = "bg-success";
                             } else {
                                 $stockColor = "bg-danger";
                             }
                         }
                     }
-                ?>
+                    ?>
                     <div class="col-md-2 <?php echo $stockColor; ?>  card m-3" style="padding:1rem 0px 1rem 0px!important;border-radius:15px;cursor: pointer;">
                         <div class="d-flex justify-content-center my-3">
                             <h3 class="font-weight-bold" style="font-family: 'Courier New', Courier, monospace;"><?php echo $i; ?></h3>
                         </div>
                     </div>
 
-                <?php } ?>
+                <?php
+                } ?>
             </div>
         </div>
     </div>
@@ -113,7 +115,10 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($stockStatusData as $key => $stock) { ?>
+                            <?php foreach (
+                                $stockStatusData
+                                as $key => $stock
+                            ) { ?>
                                 <tr>
                                     <td><?php echo $key + 1; ?></td>
                                     <td><?php echo $stock->stock_name; ?></td>
@@ -121,12 +126,10 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
                                     <td><?php echo $stock->stock_end; ?></td>
                                     <td>
                                         <?php if ($stock->stock_status == 1) {
-                                            echo 'กำลังผลิต';
+                                            echo "กำลังผลิต";
                                         } elseif ($stock->stock_status == 2) {
-                                            echo 'ผลิตสำเร็จ';
-                                        }
-
-                                        ?>
+                                            echo "ผลิตสำเร็จ";
+                                        } ?>
                                     </td>
                                     <td>
                                         <button onclick="changeStatus('<?php echo $stock->stock_id; ?>')" class="btn btn-info">เปลี่ยนสถานะ</button>
@@ -156,9 +159,10 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
                             <div class=" col-md-12 form-group">
                                 <select class="custom-select" name="stockName" id="stockName" required="">
                                     <option value="">เลือกโซน</option>
-                                    <?php
-                                    foreach ($filteredStockData as $key => $zone) {
-                                    ?>
+                                    <?php foreach (
+                                        $filteredStockData
+                                        as $key => $zone
+                                    ) { ?>
                                         <option value="<?php echo $zone; ?>"><?php echo $zone; ?></option>
                                     <?php } ?>
                                 </select>
@@ -172,7 +176,9 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
                                 <label for="">วันแรกที่ทำการผลิต</label>
                                 <input name="stockStart" class="form-control digits" id="stockStart" placeholder="" type="datetime-local" required="">
                                 <input class="form-control " id="stockQuestion" hidden placeholder="" type="text">
-                                <input class="form-control " name="userBy" id="userBy" value="<?php echo $_SESSION['user_id']; ?>" hidden placeholder="" type="text">
+                                <input class="form-control " name="userBy" id="userBy" value="<?php echo $_SESSION[
+                                    "user_id"
+                                ]; ?>" hidden placeholder="" type="text">
                                 <input class="form-control " id="stockId" hidden name="stockId" placeholder="" type="text">
                                 <div class="invalid-feedback">โปรดเลือกวันที่เริ่มทำการผลิต</div>
                             </div>
@@ -264,7 +270,9 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `action/ac_stock.php?ac=deleteStock&stockId=${stockId}&userBy=<?php echo $_SESSION['user_id']; ?>`,
+                    url: `action/ac_stock.php?ac=deleteStock&stockId=${stockId}&userBy=<?php echo $_SESSION[
+                        "user_id"
+                    ]; ?>`,
                     type: "POST",
                     data: {
                         stockId
@@ -310,7 +318,9 @@ $filteredStockData = array_diff($stockDefault, $stockExits);
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: `action/ac_stock.php?ac=changeStatus&stockId=${stockId}&userBy=<?php echo $_SESSION['user_id']; ?>`,
+                    url: `action/ac_stock.php?ac=changeStatus&stockId=${stockId}&userBy=<?php echo $_SESSION[
+                        "user_id"
+                    ]; ?>`,
                     type: "POST",
                     data: {
                         stockId
