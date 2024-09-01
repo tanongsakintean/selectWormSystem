@@ -20,10 +20,10 @@
                 <li><a class="bar-icons" href="?p=payment"><i class="pe-7s-graph3"></i><span>ระบบการขาย</span></a> </li>
                 <?php if ($_SESSION["user_role"] == 2) { ?>
                     <li><a class="bar-icons" href="?p=monitor"><i class="pe-7s-graph3"></i><span>ระบบรายงานผล</span></a> </li>
-                <li><a class="bar-icons" href="?p=transport"><i class="pe-7s-box2"></i><span>ระบบจัดการขนส่ง</span></a></li>
                 <li><a class="bar-icons" href="?p=categories"><i class="pe-7s-box2"></i><span>ระบบจัดการประเภท</span></a></li>
                 <li><a class="bar-icons" href="?p=transaction"><i class="pe-7s-graph1"></i><span>ระบบจัดการรายรับรายจ่าย</span></a></li>
                 <?php } ?>
+                <li><a class="bar-icons" href="?p=transport"><i class="pe-7s-box2"></i><span>ระบบจัดการขนส่ง</span></a></li>
         </ul>
     </div>
 </div>
